@@ -1,26 +1,49 @@
 package Utils;
 
-import java.io.File;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Events {
 
-    public static List<String> getFileNames() {
+    public static void getFiguremapData() throws IOException {
 
-        List<String> results = new ArrayList<String>();
+        String hotelFiguremapPath="backupFiles/figuremap.xml";
+        String inputFiguredataPath="input/figuremap.xml";
+        File file = new File(hotelFiguremapPath);
+        if (file.exists()) {
 
+            String hotelFigureMap=Hooks.readFile(hotelFiguremapPath);
+            String inputFigureMap=Hooks.readFile(inputFiguredataPath);
 
-        File[] files = new File("swfs").listFiles();
-        //If this pathname does not denote a directory, then listFiles() returns null.
+            List<String> figuremapDatas = Arrays.asList(inputFigureMap.split("<lib"));
+            List<String> figuremapExpectedDatas= new ArrayList<>();
 
-        for (File file : files) {
-            if (file.isFile() && file.getName().endsWith(".nitro") || file.getName().endsWith(".swf") ) {
-                results.add(file.getName());
+            String toBeeAddedData="";
+            for (int i = 1; i < figuremapDatas.size(); i++) {
+                String s=figuremapDatas.get(i);
+                s="<lib "+s;
+                if (s.contains("map>")) {
+                    s=s.replace("<map>", "").replace("</map>", "");
+                }
+                figuremapExpectedDatas.add(s);
+                toBeeAddedData=toBeeAddedData.concat(s);
             }
+
+            figuremapExpectedDatas.remove(0);
+            System.out.println(figuremapExpectedDatas);
+
+            FileWriter myWriter = new FileWriter("output/figuremap.xml");
+            int indexOfLastMapTag=hotelFigureMap.lastIndexOf("</map>");
+            myWriter.write(new StringBuffer(hotelFigureMap).insert(indexOfLastMapTag, toBeeAddedData).toString());
+            myWriter.close();
+
+            System.out.println(figuremapDatas);
+        } else {
+            System.out.println("figuremap is not found");
         }
 
-        return results;
     }
 
 }
