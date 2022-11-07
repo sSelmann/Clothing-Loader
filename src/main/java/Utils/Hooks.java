@@ -31,9 +31,10 @@ public class Hooks {
         FileWriter myWriter = new FileWriter("output/figuredata.xml");
         int indexOfSetType=hotelFigureData.indexOf("<settype type=\""+type+"\"");
         int indexOfSetTypeCloseArrow=hotelFigureData.indexOf(">", indexOfSetType);
-        myWriter.write(new StringBuffer(hotelFigureData).insert(indexOfSetTypeCloseArrow+1, "\n"+toBeAddedData).toString());
+        String figuredata= new StringBuffer(hotelFigureData).insert(indexOfSetTypeCloseArrow+1, "\n"+toBeAddedData).toString();
+        myWriter.write(figuredata);
             myWriter.close();
-            return hotelFigureData;
+            return figuredata;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
