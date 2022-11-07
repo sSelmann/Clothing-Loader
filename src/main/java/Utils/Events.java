@@ -48,14 +48,22 @@ public class Events {
 
     public static void addFiguredata() throws IOException {
 
-        String hotelFiguredataPath = "backupFiles/figuredata.xml";
-        String inputFiguredataPath = "input/figuredata.xml";
-        File file = new File(hotelFiguredataPath);
+        String hotelFiguredataXMLPath = "backupfiles/figuredata.xml";
+        String hotelFiguredataJSONPath = "backupfiles/FigureData.json";
+        String inputFiguredataXMLPath = "input/figuredata.xml";
+        String inputFiguredataJSONPath = "input/FigureData.json";
+        File xmlFile = new File(hotelFiguredataXMLPath);
+        File jsonFile = new File(hotelFiguredataJSONPath);
 
-        if (file.exists()) {
+        boolean xml= xmlFile.exists();
+        boolean json= jsonFile.exists();
 
-            String hotelFigureData = Hooks.readFile(hotelFiguredataPath);
-            String inputFigureData = Hooks.readFile(inputFiguredataPath);
+        if (xml || json) {
+
+            if (xml) {
+
+            String hotelFigureData = Hooks.readFile(hotelFiguredataXMLPath);
+            String inputFigureData = Hooks.readFile(inputFiguredataXMLPath);
 
             List<String> figuremapDatas = Arrays.asList(inputFigureData.split("<set"));
             List<String> figuremapExpectedDatas = new ArrayList<>();
@@ -70,59 +78,40 @@ public class Events {
                 int indexOfCloseQuotes = s.indexOf("\"", indexOfTypeAtt + 6);
 
                 String figureType = s.substring(indexOfTypeAtt + 6, indexOfCloseQuotes);
-                System.out.println("figureType = " + figureType);
-                switch (figureType) {
-                    case "hr":
-                        hotelFigureData = Hooks.writeFigureData("hr", hotelFigureData, s);
-                        break;
-                    case "hd":
-                        hotelFigureData = Hooks.writeFigureData("hd", hotelFigureData, s);
-                        break;
-                    case "ch":
-                        hotelFigureData = Hooks.writeFigureData("ch", hotelFigureData, s);
-                        break;
-                    case "lg":
-                        hotelFigureData = Hooks.writeFigureData("lg", hotelFigureData, s);
-                        break;
-                    case "sh":
-                        hotelFigureData = Hooks.writeFigureData("sh", hotelFigureData, s);
-                        break;
-                    case "ha":
-                        hotelFigureData = Hooks.writeFigureData("ha", hotelFigureData, s);
-                        break;
-                    case "he":
-                        hotelFigureData = Hooks.writeFigureData("he", hotelFigureData, s);
-                        break;
-                    case "ea":
-                        hotelFigureData = Hooks.writeFigureData("ea", hotelFigureData, s);
-                        break;
-                    case "fa":
-                        hotelFigureData = Hooks.writeFigureData("fa", hotelFigureData, s);
-                        break;
-                    case "ca":
-                        hotelFigureData = Hooks.writeFigureData("ca", hotelFigureData, s);
-                        break;
-                    case "wa":
-                        hotelFigureData = Hooks.writeFigureData("wa", hotelFigureData, s);
-                        break;
-                    case "cc":
-                        hotelFigureData = Hooks.writeFigureData("cc", hotelFigureData, s);
-                        break;
-                    case "cp":
-                        hotelFigureData = Hooks.writeFigureData("cp", hotelFigureData, s);
-                        break;
-                    default:
-                        System.out.println(figureType + " type is not found");
-                        break;
-
-                }
+                Hooks.sendFigureTypes(figureType, hotelFigureData,s,"xml");
             }
-            System.out.println(figuremapExpectedDatas);
+        }
+
+        if(json) {
+
+            String hotelFigureData = Hooks.readFile(hotelFiguredataJSONPath).replaceAll("\\s+", "");;
+            String inputFigureData = Hooks.readFile(inputFiguredataJSONPath).replaceAll("\\s+", "");;
+
+
+            List<String> figureDatas = Arrays.asList(inputFigureData.split("]},"));
+            List<String> figureExpectedDatas = new ArrayList<>();
+
+            for (int i = 0; i < figureDatas.size(); i++) {
+                String s = figureDatas.get(i);
+                s = s.concat("]},").replaceAll("\\s+", "");
+                figureExpectedDatas.add(s);
+
+                int indexOfPart = s.lastIndexOf("},]");
+                int lastIndexOfTypeAtt = s.indexOf("\",\"colorable\"");
+                int lastIndexOfCloseQuotes = s.lastIndexOf("\"", lastIndexOfTypeAtt-1);
+
+
+                String figureType = s.substring(lastIndexOfCloseQuotes+1, lastIndexOfTypeAtt);
+                hotelFigureData=Hooks.sendFigureTypes(figureType, hotelFigureData,s,"json");
+
+            }
+            Hooks.beautifyWriteJson(hotelFigureData,"output/figuredata.json");
 
         } else {
             System.out.println("figuremap is not found");
         }
 
+    }
     }
 
 }
