@@ -1,9 +1,6 @@
 package Utils;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 public class Hooks {
 
@@ -27,6 +24,19 @@ public class Hooks {
         }
 
         return fileOutput;
+    }
+
+    public static String writeFigureData(String type,String hotelFigureData, String toBeAddedData) {
+        try {
+        FileWriter myWriter = new FileWriter("output/figuredata.xml");
+        int indexOfSetType=hotelFigureData.indexOf("<settype type=\""+type+"\"");
+        int indexOfSetTypeCloseArrow=hotelFigureData.indexOf(">", indexOfSetType);
+        myWriter.write(new StringBuffer(hotelFigureData).insert(indexOfSetTypeCloseArrow+1, "\n"+toBeAddedData).toString());
+            myWriter.close();
+            return hotelFigureData;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }
