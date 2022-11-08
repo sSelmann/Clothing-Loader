@@ -1,7 +1,6 @@
 package Utils;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -9,17 +8,16 @@ public class Events {
 
     public static void addFiguremapData() throws IOException {
 
-        String hotelFiguremapPath = "backupFiles/figuremap.xml";
-        String inputFiguredataPath = "input/figuremap.xml";
-        File file = new File(hotelFiguremapPath);
+        String hotelFiguremapXMLPath = "backupFiles/figuremap.xml";
+        String inputFiguremapXMLPath = "input/figuremap.xml";
+        File file = new File(hotelFiguremapXMLPath);
 
         if (file.exists()) {
 
-            String hotelFigureMap = Hooks.readFile(hotelFiguremapPath);
-            String inputFigureMap = Hooks.readFile(inputFiguredataPath);
+            String hotelFigureMap = Hooks.readFile(hotelFiguremapXMLPath);
+            String inputFigureMap = Hooks.readFile(inputFiguremapXMLPath);
 
             List<String> figuremapDatas = Arrays.asList(inputFigureMap.split("<lib"));
-            List<String> figuremapExpectedDatas = new ArrayList<>();
 
             String toBeeAddedData = "";
             for (int i = 1; i < figuremapDatas.size(); i++) {
@@ -28,11 +26,8 @@ public class Events {
                 if (s.contains("map>")) {
                     s = s.replace("<map>", "").replace("</map>", "");
                 }
-                figuremapExpectedDatas.add(s);
                 toBeeAddedData = toBeeAddedData.concat(s + "\n");
             }
-
-            figuremapExpectedDatas.remove(0);
 
             FileWriter myWriter = new FileWriter("output/figuremap.xml");
             int indexOfLastMapTag = hotelFigureMap.lastIndexOf("</map>");
@@ -66,12 +61,10 @@ public class Events {
             String inputFigureData = Hooks.readFile(inputFiguredataXMLPath);
 
             List<String> figuremapDatas = Arrays.asList(inputFigureData.split("<set"));
-            List<String> figuremapExpectedDatas = new ArrayList<>();
 
             for (int i = 1; i < figuremapDatas.size(); i++) {
                 String s = figuremapDatas.get(i);
                 s = "<set" + s;
-                figuremapExpectedDatas.add(s);
 
                 int indexOfPart = s.indexOf("<part");
                 int indexOfTypeAtt = s.indexOf("type=\"", indexOfPart);
@@ -89,14 +82,11 @@ public class Events {
 
 
             List<String> figureDatas = Arrays.asList(inputFigureData.split("]},"));
-            List<String> figureExpectedDatas = new ArrayList<>();
 
             for (int i = 0; i < figureDatas.size(); i++) {
                 String s = figureDatas.get(i);
                 s = s.concat("]},").replaceAll("\\s+", "");
-                figureExpectedDatas.add(s);
 
-                int indexOfPart = s.lastIndexOf("},]");
                 int lastIndexOfTypeAtt = s.indexOf("\",\"colorable\"");
                 int lastIndexOfCloseQuotes = s.lastIndexOf("\"", lastIndexOfTypeAtt-1);
 
@@ -107,6 +97,7 @@ public class Events {
             }
             Hooks.beautifyWriteJson(hotelFigureData,"output/figuredata.json");
 
+        }
         } else {
             System.out.println("figuremap is not found");
         }
@@ -114,4 +105,4 @@ public class Events {
     }
     }
 
-}
+
