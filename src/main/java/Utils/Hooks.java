@@ -116,14 +116,14 @@ public class Hooks {
         }
     }
 
-    public static void beautifyWriteJson(String json,String path) {
-        try {
+    public static void beautifyWriteJson(String json,String path) throws IOException {
+
         ObjectMapper mapper = new ObjectMapper();
         Object obj = mapper.readValue(json, Object.class);
         FileWriter myWriter = new FileWriter(path);
             myWriter.write(mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj));
-        } catch (IOException e) {
-        }
+            myWriter.close();
+
     }
 
 }

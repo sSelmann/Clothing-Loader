@@ -9,32 +9,70 @@ public class Events {
     public static void addFiguremapData() throws IOException {
 
         String hotelFiguremapXMLPath = "backupFiles/figuremap.xml";
+        String hotelFiguremapJSONPath = "backupFiles/FigureMap.json";
         String inputFiguremapXMLPath = "input/figuremap.xml";
-        File file = new File(hotelFiguremapXMLPath);
+        String inputFiguremapJSONPath = "input/FigureMap.json";
+        File fileXML = new File(hotelFiguremapXMLPath);
+        File fileJSON = new File(hotelFiguremapXMLPath);
 
-        if (file.exists()) {
+        boolean xml=fileXML.exists();
+        boolean json=fileJSON.exists();
 
-            String hotelFigureMap = Hooks.readFile(hotelFiguremapXMLPath);
-            String inputFigureMap = Hooks.readFile(inputFiguremapXMLPath);
+        if (xml || json) {
 
-            List<String> figuremapDatas = Arrays.asList(inputFigureMap.split("<lib"));
+            if (xml) {
 
-            String toBeeAddedData = "";
-            for (int i = 1; i < figuremapDatas.size(); i++) {
-                String s = figuremapDatas.get(i);
-                s = "<lib" + s;
-                if (s.contains("map>")) {
-                    s = s.replace("<map>", "").replace("</map>", "");
+                String hotelFigureMap = Hooks.readFile(hotelFiguremapXMLPath);
+                String inputFigureMap = Hooks.readFile(inputFiguremapXMLPath);
+
+                List<String> figuremapDatas = Arrays.asList(inputFigureMap.split("<lib"));
+
+                String toBeeAddedData = "";
+                for (int i = 1; i < figuremapDatas.size(); i++) {
+                    String s = figuremapDatas.get(i);
+                    s = "<lib" + s;
+                    if (s.contains("map>")) {
+                        s = s.replace("<map>", "").replace("</map>", "");
+                    }
+                    toBeeAddedData = toBeeAddedData.concat(s + "\n");
                 }
-                toBeeAddedData = toBeeAddedData.concat(s + "\n");
+
+                FileWriter myWriter = new FileWriter("output/figuremap.xml");
+                int indexOfLastMapTag = hotelFigureMap.lastIndexOf("</map>");
+                myWriter.write(new StringBuffer(hotelFigureMap).insert(indexOfLastMapTag, toBeeAddedData).toString());
+                myWriter.close();
+
             }
 
-            FileWriter myWriter = new FileWriter("output/figuremap.xml");
-            int indexOfLastMapTag = hotelFigureMap.lastIndexOf("</map>");
-            myWriter.write(new StringBuffer(hotelFigureMap).insert(indexOfLastMapTag, toBeeAddedData).toString());
-            myWriter.close();
+            if (json) {
 
-        } else {
+                String hotelFigureMap = Hooks.readFile(hotelFiguremapJSONPath).replaceAll("\\s+", "");
+                String inputFigureMap = Hooks.readFile(inputFiguremapJSONPath).replaceAll("\\s+", "");
+
+                List<String> figuremapDatas = Arrays.asList(inputFigureMap.split("]},"));
+
+                String toBeeAddedData = "";
+                for (int i = 0; i < figuremapDatas.size(); i++) {
+                    String s = figuremapDatas.get(i);
+                    s = s.replaceAll("\\s+", "");
+                    if (i==0) {
+                        s=s.substring(1);
+                    }
+                    if (i == figuremapDatas.size()-1) {
+                        s=s.substring(0,s.length()-1);
+                    }else {
+                        s=s.concat("]},");
+                    }
+
+                    toBeeAddedData = toBeeAddedData.concat(s + "\n");
+                }
+
+                hotelFigureMap=new StringBuffer(hotelFigureMap).insert(hotelFigureMap.length()-2, ","+toBeeAddedData).toString();
+                Hooks.isJSONValid(hotelFigureMap);
+                Hooks.beautifyWriteJson(hotelFigureMap, "output/FigureMap.json");
+            }
+
+            } else {
             System.out.println("figuremap is not found");
         }
 
@@ -95,7 +133,8 @@ public class Events {
                 hotelFigureData=Hooks.sendFigureTypes(figureType, hotelFigureData,s,"json");
 
             }
-            Hooks.beautifyWriteJson(hotelFigureData,"output/figuredata.json");
+            Hooks.isJSONValid(hotelFigureData);
+            Hooks.beautifyWriteJson(hotelFigureData,"output/FigureData.json");
 
         }
         } else {
