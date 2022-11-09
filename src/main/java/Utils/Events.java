@@ -1,6 +1,7 @@
 package Utils;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class Events {
                 String inputFigureMap = Hooks.readFile(inputFiguremapXMLPath);
 
                 List<String> figuremapDatas = Arrays.asList(inputFigureMap.split("<lib"));
+                List<String> idNames = new ArrayList<>();
 
                 String toBeeAddedData = "";
                 for (int i = 1; i < figuremapDatas.size(); i++) {
@@ -34,6 +36,10 @@ public class Events {
                     if (s.contains("map>")) {
                         s = s.replace("<map>", "").replace("</map>", "");
                     }
+                    int indexOffirstQuote=s.indexOf("\"");
+                    int indexOfSecondQuote=s.indexOf("\"",indexOffirstQuote+1);
+                    idNames.add(s.substring(indexOffirstQuote+1, indexOfSecondQuote));
+                    System.out.println(s.substring(indexOffirstQuote+1, indexOfSecondQuote));
                     toBeeAddedData = toBeeAddedData.concat(s + "\n");
                 }
 
