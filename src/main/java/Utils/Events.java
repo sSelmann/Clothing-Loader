@@ -63,7 +63,7 @@ public class Events {
                 for(int i=0;i< JsonOperations.getJsonArrayLength(inputFigureMap, "FigureMap");i++) {
                     Map<String,ArrayList<String>> map=JsonOperations.getFigureMapTypeObjectID(inputFigureMap,i);
                     System.out.println(map);
-                    String object=JsonOperations.getJsonObject(inputFigureMap, "FigureMap", i).toString();
+                    String object=JsonOperations.getJsonObject(inputFigureMap, "FigureMap", i).toString(4);
                     System.out.println(object);
                     toBeeAddedData = toBeeAddedData.concat(","+object);
                 }
