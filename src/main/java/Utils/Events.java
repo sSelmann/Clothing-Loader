@@ -1,10 +1,9 @@
 package Utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import org.json.JSONArray;
-import org.json.JSONObject;
+import Operations.JsonOperations;
+import Operations.StringOperations;
+import Operations.XMLOperations;
+import com.jcabi.xml.XML;
 
 import java.io.*;
 import java.util.*;
@@ -28,28 +27,21 @@ public class Events {
             if (xml) {
 
                 String hotelFigureMap = StringOperations.readFile(hotelFiguremapXMLPath);
-                String inputFigureMap = StringOperations.readFile(inputFiguremapXMLPath);
+                List<XML> figuremapDatas = XMLOperations.getFiguremapLibs(inputFiguremapXMLPath);
 
-                List<String> figuremapDatas = Arrays.asList(inputFigureMap.split("<lib"));
-                List<String> idNames = new ArrayList<>();
+                System.out.println(XMLOperations.getFiguremapLibs(inputFiguremapXMLPath));
+                System.out.println(XMLOperations.getFiguremapLibIDs(inputFiguremapXMLPath));
+                System.out.println(XMLOperations.getFiguremapLibPartIDs(inputFiguremapXMLPath));
 
                 String toBeeAddedData = "";
-                for (int i = 1; i < figuremapDatas.size(); i++) {
-                    String s = figuremapDatas.get(i);
-                    s = "<lib" + s;
-                    if (s.contains("map>")) {
-                        s = s.replace("<map>", "").replace("</map>", "");
-                    }
-                    int indexOffirstQuote=s.indexOf("\"");
-                    int indexOfSecondQuote=s.indexOf("\"",indexOffirstQuote+1);
-                    idNames.add(s.substring(indexOffirstQuote+1, indexOfSecondQuote));
-                    System.out.println(s.substring(indexOffirstQuote+1, indexOfSecondQuote));
-                    toBeeAddedData = toBeeAddedData.concat(s + "\n");
+                for (XML s: figuremapDatas) {
+                    toBeeAddedData = toBeeAddedData.concat(s.toString());
                 }
 
                 FileWriter myWriter = new FileWriter("output/figuremap.xml");
                 int indexOfLastMapTag = hotelFigureMap.lastIndexOf("</map>");
-                myWriter.write(new StringBuffer(hotelFigureMap).insert(indexOfLastMapTag, toBeeAddedData).toString());
+                String output=new StringBuffer(hotelFigureMap).insert(indexOfLastMapTag, toBeeAddedData).toString();
+                myWriter.write(output);
                 myWriter.close();
 
             }
@@ -60,10 +52,10 @@ public class Events {
                 String inputFigureMap = StringOperations.readFile(inputFiguremapJSONPath);
                 String toBeeAddedData = "";
 
-                for(int i=0;i< JsonOperations.getJsonArrayLength(inputFigureMap, "FigureMap");i++) {
+                for(int i = 0; i< JsonOperations.getJsonArrayLength(inputFigureMap); i++) {
                     Map<String,ArrayList<String>> map=JsonOperations.getFigureMapTypeObjectID(inputFigureMap,i);
                     System.out.println(map);
-                    String object=JsonOperations.getJsonObject(inputFigureMap, "FigureMap", i).toString(4);
+                    String object=JsonOperations.getJsonObject(inputFigureMap, i).toString(4);
                     System.out.println(object);
                     toBeeAddedData = toBeeAddedData.concat(","+object);
                 }
