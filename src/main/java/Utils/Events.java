@@ -29,9 +29,6 @@ public class Events {
                 String hotelFigureMap = StringOperations.readFile(hotelFiguremapXMLPath);
                 List<XML> figuremapDatas = XMLOperations.getFiguremapLibs(inputFiguremapXMLPath);
 
-                System.out.println(XMLOperations.getFiguremapLibs(inputFiguremapXMLPath));
-                System.out.println(XMLOperations.getFiguremapLibIDs(inputFiguremapXMLPath));
-                System.out.println(XMLOperations.getFiguremapLibPartIDs(inputFiguremapXMLPath));
 
                 String toBeeAddedData = "";
                 for (XML s: figuremapDatas) {
@@ -52,10 +49,10 @@ public class Events {
                 String inputFigureMap = StringOperations.readFile(inputFiguremapJSONPath);
                 String toBeeAddedData = "";
 
-                for(int i = 0; i< JsonOperations.getJsonArrayLength(inputFigureMap); i++) {
+                for(int i = 0; i< JsonOperations.getJsonArrayLength(inputFigureMap,"FigureMap"); i++) {
                     Map<String,ArrayList<String>> map=JsonOperations.getFigureMapTypeObjectID(inputFigureMap,i);
                     System.out.println(map);
-                    String object=JsonOperations.getJsonObject(inputFigureMap, i).toString(4);
+                    String object=JsonOperations.getJsonObject(inputFigureMap, i,"FigureMap").toString(4);
                     System.out.println(object);
                     toBeeAddedData = toBeeAddedData.concat(","+object);
                 }
@@ -114,21 +111,13 @@ public class Events {
             String hotelFigureData = StringOperations.readFile(hotelFiguredataJSONPath).replaceAll("\\s+", "");;
             String inputFigureData = StringOperations.readFile(inputFiguredataJSONPath).replaceAll("\\s+", "");;
 
-
-            List<String> figureDatas = Arrays.asList(inputFigureData.split("]},"));
-
-            for (int i = 0; i < figureDatas.size(); i++) {
-                String s = figureDatas.get(i);
-                s = s.concat("]},").replaceAll("\\s+", "");
-
-                int lastIndexOfTypeAtt = s.indexOf("\",\"colorable\"");
-                int lastIndexOfCloseQuotes = s.lastIndexOf("\"", lastIndexOfTypeAtt-1);
-
-
-                String figureType = s.substring(lastIndexOfCloseQuotes+1, lastIndexOfTypeAtt);
-                hotelFigureData= StringOperations.sendFigureTypes(figureType, hotelFigureData,s,"json");
-
+            for (int i = 0; i < JsonOperations.getJsonArrayLength(inputFigureData,"FigureData"); i++) {
+                String toBeeAddedData=JsonOperations.getJsonObject(inputFigureData, i,"FigureData").toString();
+                String figureType=JsonOperations.getFigureDataFirstFigureType(inputFigureData,i);
+                System.out.println(figureType);
+                hotelFigureData= StringOperations.sendFigureTypes(figureType, hotelFigureData,toBeeAddedData+",","json");
             }
+
             StringOperations.isJSONValid(hotelFigureData);
             StringOperations.beautifyWriteJson(hotelFigureData,"output/FigureData.json");
 
