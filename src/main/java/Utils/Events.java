@@ -51,13 +51,9 @@ public class Events {
 
                 for(int i = 0; i< JsonOperations.getJsonArrayLength(inputFigureMap,"FigureMap"); i++) {
                     Map<String,ArrayList<String>> map=JsonOperations.getFigureMapTypeObjectID(inputFigureMap,i);
-                    System.out.println(map);
                     String object=JsonOperations.getJsonObject(inputFigureMap, i,"FigureMap").toString(4);
-                    System.out.println(object);
                     toBeeAddedData = toBeeAddedData.concat(","+object);
                 }
-                System.out.println(toBeeAddedData);
-
                 hotelFigureMap=hotelFigureMap.replaceAll("\\s+", "");
                 hotelFigureMap=new StringBuffer(hotelFigureMap).insert(hotelFigureMap.length()-2, toBeeAddedData).toString();
                 StringOperations.isJSONValid(hotelFigureMap);
@@ -89,21 +85,15 @@ public class Events {
             if (xml) {
 
             String hotelFigureData = StringOperations.readFile(hotelFiguredataXMLPath);
-            String inputFigureData = StringOperations.readFile(inputFiguredataXMLPath);
+            List<XML>sets=XMLOperations.getFigureDataSets(inputFiguredataXMLPath);
 
-            List<String> figuremapDatas = Arrays.asList(inputFigureData.split("<set"));
+                for (int i = 0; i < sets.size(); i++) {
+                    String set=sets.get(i).toString();
+                    String figureType=XMLOperations.getFigureDataSetFigureType(inputFiguredataXMLPath,i);
+                    hotelFigureData=StringOperations.sendFigureTypes(figureType, hotelFigureData,set,"xml");
 
-            for (int i = 1; i < figuremapDatas.size(); i++) {
-                String s = figuremapDatas.get(i);
-                s = "<set" + s;
+                }
 
-                int indexOfPart = s.indexOf("<part");
-                int indexOfTypeAtt = s.indexOf("type=\"", indexOfPart);
-                int indexOfCloseQuotes = s.indexOf("\"", indexOfTypeAtt + 6);
-
-                String figureType = s.substring(indexOfTypeAtt + 6, indexOfCloseQuotes);
-                StringOperations.sendFigureTypes(figureType, hotelFigureData,s,"xml");
-            }
         }
 
         if(json) {
@@ -114,7 +104,6 @@ public class Events {
             for (int i = 0; i < JsonOperations.getJsonArrayLength(inputFigureData,"FigureData"); i++) {
                 String toBeeAddedData=JsonOperations.getJsonObject(inputFigureData, i,"FigureData").toString();
                 String figureType=JsonOperations.getFigureDataFirstFigureType(inputFigureData,i);
-                System.out.println(figureType);
                 hotelFigureData= StringOperations.sendFigureTypes(figureType, hotelFigureData,toBeeAddedData+",","json");
             }
 
