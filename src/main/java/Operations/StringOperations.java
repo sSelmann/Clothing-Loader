@@ -46,7 +46,7 @@ public class StringOperations {
 
     public static String writeFigureDataJSON(String type,String hotelFigureData, String toBeAddedData) {
         try {
-            FileWriter myWriter = new FileWriter("output/figuredata.json");
+            FileWriter myWriter = new FileWriter("output/FigureData.json");
             int indexOfSetType=hotelFigureData.indexOf("\""+type+"\",\"paletteId\":");
             int indexOfSetTypeCloseArrow=hotelFigureData.indexOf("[", indexOfSetType);
             String figuredata= new StringBuffer(hotelFigureData).insert(indexOfSetTypeCloseArrow+1, "\n"+toBeAddedData).toString();

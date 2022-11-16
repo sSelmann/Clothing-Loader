@@ -16,7 +16,6 @@ public class XMLOperations extends DefaultHandler {
 
     }
 
-
     public static List<XML> getFiguremapLibs(String filePath) throws FileNotFoundException {
         XML xml = new XMLDocument(new File(filePath));
         return xml.nodes("//map//lib");

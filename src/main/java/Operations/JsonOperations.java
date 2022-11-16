@@ -13,7 +13,7 @@ public class JsonOperations {
     public static Map<String,ArrayList<String>> getFigureMapTypeObjectID(String jsonString, int index) {
         HashMap <String,ArrayList<String>> map=new HashMap<>();
         ArrayList<String> idList=new ArrayList<>();
-        JSONObject data=getJsonObject(jsonString, index);
+        JSONObject data=getJsonObject(jsonString, index, "FigureMap");
         String idName=data.get("id").toString();
         JSONArray arr=data.getJSONArray("parts");
         for (int i = 0; i < arr.length(); i++) {
@@ -23,16 +23,22 @@ public class JsonOperations {
         return map;
     }
 
-    public static int getJsonArrayLength(String jsonString) {
+    public static int getJsonArrayLength(String jsonString,String arrayName) {
         JSONObject obj = new JSONObject(jsonString);
-        JSONArray array= obj.getJSONArray("FigureMap");
+        JSONArray array= obj.getJSONArray(arrayName);
         return array.length();
     }
 
-    public static JSONObject getJsonObject(String jsonString, int index) {
+    public static JSONObject getJsonObject(String jsonString, int index, String arrayName) {
         JSONObject obj = new JSONObject(jsonString);
-        JSONArray pageName= obj.getJSONArray("FigureMap");
+        JSONArray pageName= obj.getJSONArray(arrayName);
         return pageName.getJSONObject(index);
+    }
+
+    public static String getFigureDataFirstFigureType(String jsonString, int index) {
+        JSONObject data=getJsonObject(jsonString, index, "FigureData");
+        JSONArray arr=data.getJSONArray("parts");
+        return arr.getJSONObject(0).get("type").toString();
     }
 
 }
