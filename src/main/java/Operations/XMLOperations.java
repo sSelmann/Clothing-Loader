@@ -1,4 +1,4 @@
-package Utils;
+package Operations;
 
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
@@ -13,11 +13,7 @@ public class XMLOperations extends DefaultHandler {
     public static void main(String[] args) throws FileNotFoundException {
         XML xml = new XMLDocument(new File("input/figuremap.xml"));
         System.out.println(xml.xpath("//map//lib//part/@id"));
-        String id = xml.xpath("//order/@id").get(0);
-        String name = xml.xpath("//order[@id=4]/text()").toString();
-        System.out.println(id);
-        System.out.println(name);
-        System.out.println(xml.nodes("orders"));
+
     }
 
 
