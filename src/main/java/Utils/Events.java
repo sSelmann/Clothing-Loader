@@ -17,7 +17,7 @@ public class Events {
         String inputFiguremapXMLPath = "input/figuremap.xml";
         String inputFiguremapJSONPath = "input/FigureMap.json";
         File fileXML = new File(hotelFiguremapXMLPath);
-        File fileJSON = new File(hotelFiguremapXMLPath);
+        File fileJSON = new File(hotelFiguremapJSONPath);
 
         boolean xml=fileXML.exists();
         boolean json=fileJSON.exists();
@@ -25,9 +25,10 @@ public class Events {
         if (xml || json) {
 
             if (xml) {
-
                 String hotelFigureMap = StringOperations.readFile(hotelFiguremapXMLPath);
                 List<XML> figuremapDatas = XMLOperations.getFiguremapLibs(inputFiguremapXMLPath);
+                HashMap<String, Object> ss=XMLOperations.getAllValues(inputFiguremapXMLPath);
+                System.out.println(ss);
 
 
                 String toBeeAddedData = "";
@@ -54,6 +55,7 @@ public class Events {
                     String object=JsonOperations.getJsonObject(inputFigureMap, i,"FigureMap").toString(4);
                     toBeeAddedData = toBeeAddedData.concat(","+object);
                 }
+
                 hotelFigureMap=hotelFigureMap.replaceAll("\\s+", "");
                 hotelFigureMap=new StringBuffer(hotelFigureMap).insert(hotelFigureMap.length()-2, toBeeAddedData).toString();
                 StringOperations.isJSONValid(hotelFigureMap);
