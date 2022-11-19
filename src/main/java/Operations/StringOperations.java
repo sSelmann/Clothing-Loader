@@ -3,6 +3,7 @@ package Operations;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -160,6 +161,11 @@ public class StringOperations {
         }
 
         return results;
+    }
+
+    public static long createRandomNumber() {
+        java.sql.Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        return (int) (Math.random() * (timestamp.getTime() / 100000));
     }
 
     public static void findFigureSetId() {

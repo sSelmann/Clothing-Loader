@@ -121,6 +121,12 @@ public class Events {
     static void matchDataAndGenerateSql(String figureMapPath) throws FileNotFoundException {
         HashMap<String, HashSet<String>> figureMapDataList=XMLOperations.getFigureMapValues(figureMapPath);
         List<String> itemNameList=StringOperations.getItemFileNames();
+        File catalogSQLFile=new File("output/sqls/catalog_items.sql");
+        File itemsBaseSQLFile=new File("output/sqls/items_base.sql");
+        File catalogClothingPath=new File("output/sqls/catalog_clothing.sql");
+        catalogSQLFile.delete();
+        itemsBaseSQLFile.delete();
+        catalogClothingPath.delete();
 
         for (String s: itemNameList) {
 
@@ -132,7 +138,7 @@ public class Events {
                     List<String> keyLists=new ArrayList<>(figureDataSets.keySet());
                     for (int i = 0; i < keyLists.size(); i++) {
                         if (figureDataSets.get(keyLists.get(i)).containsAll(figurePartIDs)) {
-                            // TODO added sql Operations
+                            generateSQL(s,figureItemName,keyLists.get(i),"output/sqls/catalog_items.sql","output/sqls/items_base.sql","output/sqls/catalog_clothing.sql", StringOperations.createRandomNumber());
                         }
                     }
                 } else {
@@ -143,6 +149,31 @@ public class Events {
             }
 
         }
+    }
+
+
+    static void generateSQL(String itemName,String figureItemName,String figuredataSetID, String catalogSQLFilePath, String itemsBaseSQLFilePath, String catalogClothingSQLFilePath,long randomIDNumber) {
+
+        try {
+
+            Writer writeItems = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(catalogSQLFilePath, true), "UTF-8"));
+            writeItems.write("INSERT INTO `catalog_items` (`id`, `page_id`, `item_ids`, `catalog_name`)VALUES ('" + randomIDNumber + "', 'PAGE_ID', '" + randomIDNumber + "', '" + itemName + "');\n");
+
+            Writer writeCatalogItems = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(itemsBaseSQLFilePath, true), "UTF-8"));
+            writeCatalogItems.write("INSERT INTO `items_base` (`id`,`item_name`,`public_name`,`stack_height`,`allow_stack`,`sprite_id`,`interaction_type`,`interaction_modes_count`)VALUES ('" + randomIDNumber + "', '" + itemName + "', '" + itemName + "_name', '1', '1', '" + randomIDNumber + "', 'default', '1');\n");
+
+            Writer writeCatalogClothing = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(catalogClothingSQLFilePath, true), "UTF-8"));
+            writeCatalogClothing.write("INSERT INTO `catalog_clothing` (`name`,`set_id`)VALUES ('" + figureItemName + "', '" + figuredataSetID + "');\n");
+
+            writeItems.close();
+            writeCatalogItems.close();
+            writeCatalogClothing.close();
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
 
