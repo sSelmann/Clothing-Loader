@@ -10,6 +10,8 @@ import java.util.*;
 
 public class Events {
 
+    static String inputFiguredataXMLPath = "input/figuredata.xml";
+
     public static void addFiguremapData() throws IOException {
 
         String hotelFiguremapXMLPath = "backupFiles/figuremap.xml";
@@ -27,27 +29,7 @@ public class Events {
             if (xml) {
                 String hotelFigureMap = StringOperations.readFile(hotelFiguremapXMLPath);
                 List<XML> figuremapDatas = XMLOperations.getFiguremapLibs(inputFiguremapXMLPath);
-                HashMap<String, Object> ss=XMLOperations.getAllValues(inputFiguremapXMLPath);
-                List<String> itemNameList=StringOperations.getItemFileNames();
-
-                for (String s: itemNameList) {
-
-                    if (GetConfig.ini.get("item&figures",s) !=null) {
-                        String figureItemName= GetConfig.ini.get("item&figures",s);
-                        if (ss.get(figureItemName) != null) {
-                            Object figurePartIDs=ss.get(figureItemName);
-
-                        } else {
-                            System.out.println("There is no matching figuremap id for "+figureItemName+" please check config.");
-                        }
-                    } else {
-                        System.out.println("There is no matching figure item name for "+s+" please check config.");
-                    }
-
-                }
-
-                System.out.println(itemNameList);
-
+                matchDataAndGenerateSql(inputFiguremapXMLPath);
 
                 String toBeeAddedData = "";
                 for (XML s: figuremapDatas) {
@@ -92,7 +74,6 @@ public class Events {
 
         String hotelFiguredataXMLPath = "backupfiles/figuredata.xml";
         String hotelFiguredataJSONPath = "backupfiles/FigureData.json";
-        String inputFiguredataXMLPath = "input/figuredata.xml";
         String inputFiguredataJSONPath = "input/FigureData.json";
         File xmlFile = new File(hotelFiguredataXMLPath);
         File jsonFile = new File(hotelFiguredataJSONPath);
@@ -137,6 +118,34 @@ public class Events {
 
     }
 
+    static void matchDataAndGenerateSql(String figureMapPath) throws FileNotFoundException {
+        HashMap<String, HashSet<String>> figureMapDataList=XMLOperations.getFigureMapValues(figureMapPath);
+        List<String> itemNameList=StringOperations.getItemFileNames();
+
+        for (String s: itemNameList) {
+
+            if (GetConfig.ini.get("item&figures",s) !=null) {
+                String figureItemName= GetConfig.ini.get("item&figures",s);
+                if (figureMapDataList.get(figureItemName) != null) {
+                    HashSet<String> figurePartIDs=figureMapDataList.get(figureItemName);
+                    HashMap<String,HashSet<String>> figureDataSets=XMLOperations.getFigureDataValues(inputFiguredataXMLPath);
+                    List<String> keyLists=new ArrayList<>(figureDataSets.keySet());
+                    for (int i = 0; i < keyLists.size(); i++) {
+                        if (figureDataSets.get(keyLists.get(i)).containsAll(figurePartIDs)) {
+                            // TODO added sql Operations
+                        }
+                    }
+                } else {
+                    System.out.println("There is no matching figuremap id for "+figureItemName+" please check config.");
+                }
+            } else {
+                System.out.println("There is no matching figure item name for "+s+" please check config.");
+            }
+
+        }
     }
+
+
+}
 
 
