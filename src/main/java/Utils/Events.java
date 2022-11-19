@@ -28,7 +28,25 @@ public class Events {
                 String hotelFigureMap = StringOperations.readFile(hotelFiguremapXMLPath);
                 List<XML> figuremapDatas = XMLOperations.getFiguremapLibs(inputFiguremapXMLPath);
                 HashMap<String, Object> ss=XMLOperations.getAllValues(inputFiguremapXMLPath);
-                System.out.println(ss);
+                List<String> itemNameList=StringOperations.getItemFileNames();
+
+                for (String s: itemNameList) {
+
+                    if (GetConfig.ini.get("item&figures",s) !=null) {
+                        String figureItemName= GetConfig.ini.get("item&figures",s);
+                        if (ss.get(figureItemName) != null) {
+                            Object figurePartIDs=ss.get(figureItemName);
+
+                        } else {
+                            System.out.println("There is no matching figuremap id for "+figureItemName+" please check config.");
+                        }
+                    } else {
+                        System.out.println("There is no matching figure item name for "+s+" please check config.");
+                    }
+
+                }
+
+                System.out.println(itemNameList);
 
 
                 String toBeeAddedData = "";
