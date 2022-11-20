@@ -36,7 +36,7 @@ public class Events {
                     toBeeAddedData = toBeeAddedData.concat(s.toString());
                 }
 
-                FileWriter myWriter = new FileWriter("output/figuremap.xml");
+                FileWriter myWriter = new FileWriter("output/xml/figuremap.xml");
                 int indexOfLastMapTag = hotelFigureMap.lastIndexOf("</map>");
                 String output = new StringBuffer(hotelFigureMap).insert(indexOfLastMapTag, toBeeAddedData).toString();
                 myWriter.write(output);
@@ -59,7 +59,7 @@ public class Events {
                 hotelFigureMap = hotelFigureMap.replaceAll("\\s+", "");
                 hotelFigureMap = new StringBuffer(hotelFigureMap).insert(hotelFigureMap.length() - 2, toBeeAddedData).toString();
                 StringOperations.isJSONValid(hotelFigureMap);
-                StringOperations.beautifyWriteJson(hotelFigureMap, "output/FigureMap.json");
+                StringOperations.beautifyWriteJson(hotelFigureMap, "output/json/FigureMap.json");
 
             }
 
@@ -111,7 +111,7 @@ public class Events {
                 }
 
                 StringOperations.isJSONValid(hotelFigureData);
-                StringOperations.beautifyWriteJson(hotelFigureData, "output/FigureData.json");
+                StringOperations.beautifyWriteJson(hotelFigureData, "output/json/FigureData.json");
 
             }
         } else {
@@ -126,11 +126,13 @@ public class Events {
         File catalogSQLFile = new File("output/sqls/catalog_items.sql");
         File itemsBaseSQLFile = new File("output/sqls/items_base.sql");
         File catalogClothingPath = new File("output/sqls/catalog_clothing.sql");
-        File furnidataXMLPath = new File("output/furnidata.xml");
+        File furniDataXMLPath = new File("output/furnidata.xml");
+        File furnitureDataJsonPath = new File("output/json/FurnitureData.json");
         catalogSQLFile.delete();
         itemsBaseSQLFile.delete();
         catalogClothingPath.delete();
-        furnidataXMLPath.delete();
+        furniDataXMLPath.delete();
+        furnitureDataJsonPath.delete();
 
         long randomItemID = StringOperations.createRandomNumber();
 
@@ -145,10 +147,11 @@ public class Events {
                     for (int i = 0; i < keyLists.size(); i++) {
                         if (figureDataSets.get(keyLists.get(i)).containsAll(figurePartIDs)) {
                             int customParam = Integer.parseInt(keyLists.get(i));
-                            randomItemID++;
 
                             generateSQL(s, figureItemName, customParam, "output/sqls/catalog_items.sql", "output/sqls/items_base.sql", "output/sqls/catalog_clothing.sql", randomItemID);
-                            XMLOperations.createXmlData(s, customParam, randomItemID, "output/furnidata.xml");
+                            XMLOperations.createXmlData(s, customParam, randomItemID, "output/xml/furnidata.xml");
+                            JsonOperations.createJsonData(s,customParam,randomItemID,"output/json/FurnitureData.json");
+                            randomItemID++;
                         }
                     }
                 } else {

@@ -3,7 +3,7 @@ package Operations;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -39,6 +39,45 @@ public class JsonOperations {
         JSONObject data=getJsonObject(jsonString, index, "FigureData");
         JSONArray arr=data.getJSONArray("parts");
         return arr.getJSONObject(0).get("type").toString();
+    }
+
+    public static void createJsonData(String fileName, int customParams, long randomNumber, String furnitureDataJsonFile) {
+        try {
+            Writer writeCatalogItems = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(furnitureDataJsonFile, true), "UTF-8"));
+            //We can write any JSONArray or JSONObject instance to the file
+            writeCatalogItems.write(
+                    "{" + "\"id\": " + randomNumber + "," +
+                            "\"classname\": " + "\"" + fileName + "\"," +
+                            "\"revision\": " + randomNumber / 10 + "," +
+                            "\"category\": \"unknow\"," +
+                            "\"defaultdir\": " + 0 + "," +
+                            "\"xdim\": " + 1 + "," +
+                            "\"ydim\": " + 1 + "," +
+                            "\"partcolors\": " + "{ \"color\": [] }," +
+                            "\"name\": \"" + fileName + "\"," +
+                            "\"description\": " + "\"\"," +
+                            "\"adurl\": \"\"," +
+                            "\"offerid\":" + ((randomNumber * 2) / 10) + "," +
+                            "\"buyout\": false," +
+                            "\"rentofferid\": " + -1 + "," +
+                            "\"rentbuyout\": false," +
+                            "\"bc\": false," +
+                            "\"excludeddynamic\":  false," +
+                            "\"customparams\": \""+customParams+"\"," +
+                            "\"specialtype\": " + 1 + "," +
+                            "\"canstandon\": false," +
+                            "\"cansiton\": false," +
+                            "\"canlayon\": false," +
+                            "\"furniline\": \"custom\"," +
+                            "\"environment\":  \"\"," +
+                            "\"rare\": false},"
+
+            );
+            writeCatalogItems.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
