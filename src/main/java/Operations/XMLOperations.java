@@ -3,8 +3,8 @@ package Operations;
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
 import jdk.internal.org.xml.sax.helpers.DefaultHandler;
-import java.io.File;
-import java.io.FileNotFoundException;
+
+import java.io.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -75,6 +75,41 @@ public class XMLOperations extends DefaultHandler {
             map.put(xml.xpath("//set/@id").get(0),setIDs);
         }
         return map;
+    }
+
+    public static void createXmlData(String fileName, int customParams, long randomNumber, String furnidataXmlFile) {
+        try {
+            Writer writeCatalogItems = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(furnidataXmlFile, true), "UTF-8"));
+            //We can write any JSONArray or JSONObject instance to the file
+            writeCatalogItems.write(
+                    "<furnitype id=\"" + randomNumber + "\" classname=\"" + fileName + "\">\n" +
+                            "\t\t<revision>" + randomNumber / 10 + "</revision>\n" +
+                            "\t\t<defaultdir>0</defaultdir>\n" +
+                            "\t\t<xdim>1</xdim>\n" +
+                            "\t\t<ydim>1</ydim>\n" +
+                            "\t\t<partcolors />\n" +
+                            "\t\t<name>" + fileName + "</name>\n" +
+                            "\t\t<description></description>\n" +
+                            "\t\t<adurl></adurl>\n" +
+                            "\t\t<offerid>" + ((randomNumber * 2) / 10) + "</offerid>\n" +
+                            "\t\t<buyout>0</buyout>\n" +
+                            "\t\t<rentofferid>-1</rentofferid>\n" +
+                            "\t\t<rentbuyout>0</rentbuyout>\n" +
+                            "\t\t<bc>0</bc>\n" +
+                            "\t\t<excludeddynamic>0</excludeddynamic>\n" +
+                            "\t\t<customparams>"+customParams+"</customparams>\n" +
+                            "\t\t<specialtype>23</specialtype>\n" +
+                            "\t\t<canstandon>0</canstandon>\n" +
+                            "\t\t<cansiton>0</cansiton>\n" +
+                            "\t\t<canlayon>0</canlayon>\n" +
+                            "</furnitype>\n"
+
+            );
+            writeCatalogItems.flush();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

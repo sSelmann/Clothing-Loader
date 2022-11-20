@@ -21,8 +21,8 @@ public class Events {
         File fileXML = new File(hotelFiguremapXMLPath);
         File fileJSON = new File(hotelFiguremapJSONPath);
 
-        boolean xml=fileXML.exists();
-        boolean json=fileJSON.exists();
+        boolean xml = fileXML.exists();
+        boolean json = fileJSON.exists();
 
         if (xml || json) {
 
@@ -32,13 +32,13 @@ public class Events {
                 matchDataAndGenerateSql(inputFiguremapXMLPath);
 
                 String toBeeAddedData = "";
-                for (XML s: figuremapDatas) {
+                for (XML s : figuremapDatas) {
                     toBeeAddedData = toBeeAddedData.concat(s.toString());
                 }
 
                 FileWriter myWriter = new FileWriter("output/figuremap.xml");
                 int indexOfLastMapTag = hotelFigureMap.lastIndexOf("</map>");
-                String output=new StringBuffer(hotelFigureMap).insert(indexOfLastMapTag, toBeeAddedData).toString();
+                String output = new StringBuffer(hotelFigureMap).insert(indexOfLastMapTag, toBeeAddedData).toString();
                 myWriter.write(output);
                 myWriter.close();
 
@@ -50,20 +50,20 @@ public class Events {
                 String inputFigureMap = StringOperations.readFile(inputFiguremapJSONPath);
                 String toBeeAddedData = "";
 
-                for(int i = 0; i< JsonOperations.getJsonArrayLength(inputFigureMap,"FigureMap"); i++) {
-                    Map<String,ArrayList<String>> map=JsonOperations.getFigureMapTypeObjectID(inputFigureMap,i);
-                    String object=JsonOperations.getJsonObject(inputFigureMap, i,"FigureMap").toString(4);
-                    toBeeAddedData = toBeeAddedData.concat(","+object);
+                for (int i = 0; i < JsonOperations.getJsonArrayLength(inputFigureMap, "FigureMap"); i++) {
+                    Map<String, ArrayList<String>> map = JsonOperations.getFigureMapTypeObjectID(inputFigureMap, i);
+                    String object = JsonOperations.getJsonObject(inputFigureMap, i, "FigureMap").toString(4);
+                    toBeeAddedData = toBeeAddedData.concat("," + object);
                 }
 
-                hotelFigureMap=hotelFigureMap.replaceAll("\\s+", "");
-                hotelFigureMap=new StringBuffer(hotelFigureMap).insert(hotelFigureMap.length()-2, toBeeAddedData).toString();
+                hotelFigureMap = hotelFigureMap.replaceAll("\\s+", "");
+                hotelFigureMap = new StringBuffer(hotelFigureMap).insert(hotelFigureMap.length() - 2, toBeeAddedData).toString();
                 StringOperations.isJSONValid(hotelFigureMap);
                 StringOperations.beautifyWriteJson(hotelFigureMap, "output/FigureMap.json");
 
             }
 
-            } else {
+        } else {
             System.out.println("figuremap is not found");
         }
 
@@ -78,81 +78,91 @@ public class Events {
         File xmlFile = new File(hotelFiguredataXMLPath);
         File jsonFile = new File(hotelFiguredataJSONPath);
 
-        boolean xml= xmlFile.exists();
-        boolean json= jsonFile.exists();
+        boolean xml = xmlFile.exists();
+        boolean json = jsonFile.exists();
 
         if (xml || json) {
 
             if (xml) {
 
-            String hotelFigureData = StringOperations.readFile(hotelFiguredataXMLPath);
-            List<XML>sets=XMLOperations.getFigureDataSets(inputFiguredataXMLPath);
+                String hotelFigureData = StringOperations.readFile(hotelFiguredataXMLPath);
+                List<XML> sets = XMLOperations.getFigureDataSets(inputFiguredataXMLPath);
 
                 for (int i = 0; i < sets.size(); i++) {
-                    String set=sets.get(i).toString();
-                    String figureType=XMLOperations.getFigureDataSetFigureType(inputFiguredataXMLPath,i);
-                    hotelFigureData=StringOperations.sendFigureTypes(figureType, hotelFigureData,set,"xml");
+                    String set = sets.get(i).toString();
+                    String figureType = XMLOperations.getFigureDataSetFigureType(inputFiguredataXMLPath, i);
+                    hotelFigureData = StringOperations.sendFigureTypes(figureType, hotelFigureData, set, "xml");
 
                 }
 
-        }
-
-        if(json) {
-
-            String hotelFigureData = StringOperations.readFile(hotelFiguredataJSONPath).replaceAll("\\s+", "");;
-            String inputFigureData = StringOperations.readFile(inputFiguredataJSONPath).replaceAll("\\s+", "");;
-
-            for (int i = 0; i < JsonOperations.getJsonArrayLength(inputFigureData,"FigureData"); i++) {
-                String toBeeAddedData=JsonOperations.getJsonObject(inputFigureData, i,"FigureData").toString();
-                String figureType=JsonOperations.getFigureDataFirstFigureType(inputFigureData,i);
-                hotelFigureData= StringOperations.sendFigureTypes(figureType, hotelFigureData,toBeeAddedData+",","json");
             }
 
-            StringOperations.isJSONValid(hotelFigureData);
-            StringOperations.beautifyWriteJson(hotelFigureData,"output/FigureData.json");
+            if (json) {
 
-        }
+                String hotelFigureData = StringOperations.readFile(hotelFiguredataJSONPath).replaceAll("\\s+", "");
+                ;
+                String inputFigureData = StringOperations.readFile(inputFiguredataJSONPath).replaceAll("\\s+", "");
+                ;
+
+                for (int i = 0; i < JsonOperations.getJsonArrayLength(inputFigureData, "FigureData"); i++) {
+                    String toBeeAddedData = JsonOperations.getJsonObject(inputFigureData, i, "FigureData").toString();
+                    String figureType = JsonOperations.getFigureDataFirstFigureType(inputFigureData, i);
+                    hotelFigureData = StringOperations.sendFigureTypes(figureType, hotelFigureData, toBeeAddedData + ",", "json");
+                }
+
+                StringOperations.isJSONValid(hotelFigureData);
+                StringOperations.beautifyWriteJson(hotelFigureData, "output/FigureData.json");
+
+            }
         } else {
             System.out.println("figuremap is not found");
         }
 
     }
 
-    static void matchDataAndGenerateSql(String figureMapPath) throws FileNotFoundException {
-        HashMap<String, HashSet<String>> figureMapDataList=XMLOperations.getFigureMapValues(figureMapPath);
-        List<String> itemNameList=StringOperations.getItemFileNames();
-        File catalogSQLFile=new File("output/sqls/catalog_items.sql");
-        File itemsBaseSQLFile=new File("output/sqls/items_base.sql");
-        File catalogClothingPath=new File("output/sqls/catalog_clothing.sql");
+    private static void matchDataAndGenerateSql(String figureMapPath) throws FileNotFoundException {
+        HashMap<String, HashSet<String>> figureMapDataList = XMLOperations.getFigureMapValues(figureMapPath);
+        List<String> itemNameList = StringOperations.getItemFileNames();
+        File catalogSQLFile = new File("output/sqls/catalog_items.sql");
+        File itemsBaseSQLFile = new File("output/sqls/items_base.sql");
+        File catalogClothingPath = new File("output/sqls/catalog_clothing.sql");
+        File furnidataXMLPath = new File("output/furnidata.xml");
         catalogSQLFile.delete();
         itemsBaseSQLFile.delete();
         catalogClothingPath.delete();
+        furnidataXMLPath.delete();
 
-        for (String s: itemNameList) {
+        long randomItemID = StringOperations.createRandomNumber();
 
-            if (GetConfig.ini.get("item&figures",s) !=null) {
-                String figureItemName= GetConfig.ini.get("item&figures",s);
+        for (String s : itemNameList) {
+
+            if (GetConfig.ini.get("Add_To_Clothing_Catalog_&_Market_Catalog", s) != null) {
+                String figureItemName = GetConfig.ini.get("Add_To_Clothing_Catalog_&_Market_Catalog", s);
                 if (figureMapDataList.get(figureItemName) != null) {
-                    HashSet<String> figurePartIDs=figureMapDataList.get(figureItemName);
-                    HashMap<String,HashSet<String>> figureDataSets=XMLOperations.getFigureDataValues(inputFiguredataXMLPath);
-                    List<String> keyLists=new ArrayList<>(figureDataSets.keySet());
+                    HashSet<String> figurePartIDs = figureMapDataList.get(figureItemName);
+                    HashMap<String, HashSet<String>> figureDataSets = XMLOperations.getFigureDataValues(inputFiguredataXMLPath);
+                    List<String> keyLists = new ArrayList<>(figureDataSets.keySet());
                     for (int i = 0; i < keyLists.size(); i++) {
                         if (figureDataSets.get(keyLists.get(i)).containsAll(figurePartIDs)) {
-                            generateSQL(s,figureItemName,keyLists.get(i),"output/sqls/catalog_items.sql","output/sqls/items_base.sql","output/sqls/catalog_clothing.sql", StringOperations.createRandomNumber());
+                            int customParam = Integer.parseInt(keyLists.get(i));
+                            randomItemID++;
+
+                            generateSQL(s, figureItemName, customParam, "output/sqls/catalog_items.sql", "output/sqls/items_base.sql", "output/sqls/catalog_clothing.sql", randomItemID);
+                            XMLOperations.createXmlData(s, customParam, randomItemID, "output/furnidata.xml");
                         }
                     }
                 } else {
-                    System.out.println("There is no matching figuremap id for "+figureItemName+" please check config.");
+                    System.out.println("There is no matching figuremap id for " + figureItemName + " please check config.");
                 }
             } else {
-                System.out.println("There is no matching figure item name for "+s+" please check config.");
+                System.out.println("There is no matching figure item name for " + s + " please check config.");
             }
 
         }
     }
 
 
-    static void generateSQL(String itemName,String figureItemName,String figuredataSetID, String catalogSQLFilePath, String itemsBaseSQLFilePath, String catalogClothingSQLFilePath,long randomIDNumber) {
+    private static void generateSQL(String itemName, String figureItemName, int figuredataSetID, String catalogSQLFilePath, String itemsBaseSQLFilePath, String catalogClothingSQLFilePath, long randomIDNumber) {
 
         try {
 
