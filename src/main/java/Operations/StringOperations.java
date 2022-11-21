@@ -137,24 +137,6 @@ public class StringOperations {
 
     }
 
-
-
-    public static void createSQLDatas(String itemName, String catalogSQLFilePath, String itemsBaseSQLFilePath, String randomIDNumber) {
-            try {
-                Writer writeItems = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(catalogSQLFilePath, true), "UTF-8"));
-                writeItems.write("INSERT INTO `catalog_items` (`id`, `page_id`, `item_ids`, `catalog_name`)VALUES ('" + randomIDNumber + "', 'PAGE_ID', '" + randomIDNumber + "', '" + itemName + "');\n");
-                Writer writeCatalogItems = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(itemsBaseSQLFilePath, true), "UTF-8"));
-                writeCatalogItems.write("INSERT INTO `items_base` (`id`,`item_name`,`public_name`,`stack_height`,`allow_stack`,`sprite_id`,`interaction_type`,`interaction_modes_count`)VALUES ('" + randomIDNumber + "', '" + itemName + "', '" + itemName + "_name', '1', '1', '" + randomIDNumber + "', 'default', '1');\n");
-                writeItems.close();
-                writeCatalogItems.close();
-            } catch (UnsupportedEncodingException e) {
-                throw new RuntimeException(e);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-    }
-
     public static List<String> getItemFileNames() {
 
         List<String> results = new ArrayList<String>();
