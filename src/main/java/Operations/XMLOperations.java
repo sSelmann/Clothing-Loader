@@ -5,10 +5,7 @@ import com.jcabi.xml.XMLDocument;
 import jdk.internal.org.xml.sax.helpers.DefaultHandler;
 
 import java.io.*;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
 
 public class XMLOperations extends DefaultHandler {
 
@@ -23,18 +20,13 @@ public class XMLOperations extends DefaultHandler {
         return xml.nodes("//map//lib");
     }
 
-    public static List<String> getFiguremapLibIDsFromFile(String filePath) throws FileNotFoundException {
-        XML xml = new XMLDocument(new File(filePath));
-        return xml.xpath("//map//lib/@id");
-    }
-
     public static String getFiguremapLibIDsFromContent(String XMLcontent) throws FileNotFoundException {
         XML xml = new XMLDocument(XMLcontent);
         return xml.xpath("//lib/@id").get(0);
     }
 
-    public static HashMap<String,HashSet<String>> getFigureMapValues(String filePath) throws FileNotFoundException {
-        HashMap<String,HashSet<String>> values=new HashMap<>();
+    public static HashMap<String,ArrayList<String>> getFigureMapValues(String filePath) throws FileNotFoundException {
+        HashMap<String, ArrayList<String>> values=new HashMap<>();
         List<XML> listOfLibs=getFiguremapLibs(filePath);
         for (int i = 0; i < listOfLibs.size(); i++) {
             values.put(getFiguremapLibIDsFromContent(listOfLibs.get(i).toString()), getFiguremapLibPartIDs(filePath,i));
@@ -42,7 +34,7 @@ public class XMLOperations extends DefaultHandler {
         return values;
     }
 
-    public static HashSet<String> getFiguremapLibPartIDs(String filePath, int index) throws FileNotFoundException {
+    public static ArrayList<String> getFiguremapLibPartIDs(String filePath, int index) throws FileNotFoundException {
         List<XML> list=getFiguremapLibs(filePath);
 
         HashSet<String> set=new HashSet<>();
@@ -50,7 +42,8 @@ public class XMLOperations extends DefaultHandler {
             XML xml=new XMLDocument(list.get(index).node());
             set.addAll(xml.xpath("//lib//part/@id"));
         }
-        return set;
+
+        return new ArrayList<>(set);
     }
 
 
@@ -66,13 +59,13 @@ public class XMLOperations extends DefaultHandler {
         return xml.xpath("//set//part/@type").get(0);
     }
 
-    public static HashMap<String,HashSet<String>> getFigureDataValues(String filePath) throws FileNotFoundException {
-        HashMap<String,HashSet<String>> map=new HashMap<>();
+    public static HashMap<String,ArrayList<String>> getFigureDataValues(String filePath) throws FileNotFoundException {
+        HashMap<String,ArrayList<String>> map=new HashMap<>();
         List<XML> sets= getFigureDataSets(filePath);
         for (XML s: sets) {
             XML xml = new XMLDocument(s.toString());
             HashSet<String> setIDs= new HashSet<>(xml.xpath("//set//part/@id"));
-            map.put(xml.xpath("//set/@id").get(0),setIDs);
+            map.put(xml.xpath("//set/@id").get(0),new ArrayList<>(setIDs));
         }
         return map;
     }
