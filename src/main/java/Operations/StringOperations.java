@@ -9,10 +9,12 @@ import java.util.List;
 
 public class StringOperations {
 
-    public static String readFile(String path) throws IOException {
+    public static String readFile(String path) {
         String fileOutput = null;
-        BufferedReader br = new BufferedReader(new FileReader(path));
+        BufferedReader br = null;
         try {
+            br = new BufferedReader(new FileReader(path));
+
             StringBuilder sb = new StringBuilder();
             String line = br.readLine();
 
@@ -24,8 +26,14 @@ public class StringOperations {
             fileOutput = sb.toString();
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         } finally {
-            br.close();
+            try {
+                br.close();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
         }
 
         return fileOutput;
