@@ -6,20 +6,23 @@ import org.json.JSONObject;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 public class JsonOperations {
 
-    public static Map<String,ArrayList<String>> getFigureMapTypeObjectID(String jsonString, int index) {
+    public static Map<String,ArrayList<String>> getFigureMapTypeObjectID(String jsonString) {
         HashMap <String,ArrayList<String>> map=new HashMap<>();
-        ArrayList<String> idList=new ArrayList<>();
-        JSONObject data=getJsonObject(jsonString, index, "FigureMap");
-        String idName=data.get("id").toString();
-        JSONArray arr=data.getJSONArray("parts");
-        for (int i = 0; i < arr.length(); i++) {
-            idList.add(arr.getJSONObject(i).get("id").toString());
+        for (int i = 0; i < getJsonArrayLength(jsonString, "FigureMap"); i++) {
+            ArrayList<String> idList=new ArrayList<>();
+            JSONObject data=getJsonObject(jsonString, i, "FigureMap");
+            String idName=data.get("id").toString();
+            JSONArray arr=data.getJSONArray("parts");
+            for (int j = 0; j < arr.length(); j++) {
+                idList.add(arr.getJSONObject(j).get("id").toString());
+            }
+            map.put(idName,idList);
         }
-        map.put(idName,idList);
         return map;
     }
 
@@ -39,6 +42,23 @@ public class JsonOperations {
         JSONObject data=getJsonObject(jsonString, index, "FigureData");
         JSONArray arr=data.getJSONArray("parts");
         return arr.getJSONObject(0).get("type").toString();
+    }
+
+    public static HashMap<String,ArrayList<String>> getFigureDataValues(String jsonString) {
+        HashMap<String,ArrayList<String>> valueMap=new HashMap<>();
+        for (int i = 0; i < getJsonArrayLength(jsonString, "FigureData"); i++) {
+
+            ArrayList<String> partIds=new ArrayList<>();
+            JSONObject data=getJsonObject(jsonString, i, "FigureData");
+            JSONArray arr=data.getJSONArray("parts");
+            for (int j = 0; j < arr.length(); j++) {
+                partIds.add(arr.getJSONObject(j).get("id").toString());
+            }
+            valueMap.put(data.get("id").toString(), partIds);
+
+
+        }
+        return valueMap;
     }
 
     public static void createJsonData(String fileName, int customParams, long randomNumber, String furnitureDataJsonFile) {

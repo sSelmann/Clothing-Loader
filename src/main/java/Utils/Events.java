@@ -11,6 +11,10 @@ import java.util.*;
 public class Events {
 
     static String inputFiguredataXMLPath = "input/figuredata.xml";
+    static String inputFiguremapJSONPath = "input/FigureMap.json";
+    static String inputFigureDataJSONPath = "input/FigureData.json";
+    static String inputJsonFigureMap = StringOperations.readFile(inputFiguremapJSONPath);
+    static String inputJsonFigureData = StringOperations.readFile(inputFigureDataJSONPath);
 
     public static void addFiguremapData() throws IOException {
 
@@ -29,7 +33,7 @@ public class Events {
             if (xml) {
                 String hotelFigureMap = StringOperations.readFile(hotelFiguremapXMLPath);
                 List<XML> figuremapDatas = XMLOperations.getFiguremapLibs(inputFiguremapXMLPath);
-                matchDataAndGenerateSql(inputFiguremapXMLPath);
+                matchXMLDataAndGenerateSql(inputFiguremapXMLPath, inputJsonFigureMap);
 
                 String toBeeAddedData = "";
                 for (XML s : figuremapDatas) {
@@ -49,12 +53,13 @@ public class Events {
                 String hotelFigureMap = StringOperations.readFile(hotelFiguremapJSONPath);
                 String inputFigureMap = StringOperations.readFile(inputFiguremapJSONPath);
                 String toBeeAddedData = "";
+                //matchJSONDataAndGenerateSql(inputFiguremapJSONPath);
 
-                for (int i = 0; i < JsonOperations.getJsonArrayLength(inputFigureMap, "FigureMap"); i++) {
-                    Map<String, ArrayList<String>> map = JsonOperations.getFigureMapTypeObjectID(inputFigureMap, i);
+                for (int i = 0; i < JsonOperations.getJsonArrayLength(inputFigureMap,"FigureMap"); i++) {
                     String object = JsonOperations.getJsonObject(inputFigureMap, i, "FigureMap").toString(4);
                     toBeeAddedData = toBeeAddedData.concat("," + object);
                 }
+
 
                 hotelFigureMap = hotelFigureMap.replaceAll("\\s+", "");
                 hotelFigureMap = new StringBuffer(hotelFigureMap).insert(hotelFigureMap.length() - 2, toBeeAddedData).toString();
@@ -120,9 +125,31 @@ public class Events {
 
     }
 
-    private static void matchDataAndGenerateSql(String figureMapPath) throws FileNotFoundException {
-        HashMap<String, HashSet<String>> figureMapDataList = XMLOperations.getFigureMapValues(figureMapPath);
+    private static void matchXMLDataAndGenerateSql(String figureMapXMLPath, String figureMapJSONPath) throws FileNotFoundException {
+        HashMap<String, ArrayList<String>> figureMapXMLDataList = XMLOperations.getFigureMapValues(figureMapXMLPath);
+        System.out.println("figureMapXMLDataList = " + figureMapXMLDataList);
+        Map<String, ArrayList<String>> figureMapJSONSDataList = JsonOperations.getFigureMapTypeObjectID(figureMapJSONPath);
+        List<String> keylist=new ArrayList<>(figureMapJSONSDataList.keySet());
+
         List<String> itemNameList = StringOperations.getItemFileNames();
+        List<String> keyNameList = new ArrayList<>();
+
+        for (String s : itemNameList) {
+            String figureItemName = GetConfig.ini.get("Add_To_Clothing_Catalog_&_Market_Catalog", s);
+            keyNameList.add(figureItemName);
+
+        }
+
+        for (String s: keylist) {
+            if (figureMapXMLDataList.containsKey(s)) {
+                figureMapJSONSDataList.remove(s);
+            }
+        }
+
+        if (figureMapJSONSDataList.size()>0) {
+            figureMapXMLDataList.putAll(figureMapJSONSDataList);
+        }
+
         File catalogSQLFile = new File("output/sqls/catalog_items.sql");
         File itemsBaseSQLFile = new File("output/sqls/items_base.sql");
         File catalogClothingPath = new File("output/sqls/catalog_clothing.sql");
@@ -140,15 +167,23 @@ public class Events {
 
             if (GetConfig.ini.get("Add_To_Clothing_Catalog_&_Market_Catalog", s) != null) {
                 String figureItemName = GetConfig.ini.get("Add_To_Clothing_Catalog_&_Market_Catalog", s);
-                if (figureMapDataList.get(figureItemName) != null) {
-                    HashSet<String> figurePartIDs = figureMapDataList.get(figureItemName);
-                    HashMap<String, HashSet<String>> figureDataSets = XMLOperations.getFigureDataValues(inputFiguredataXMLPath);
-                    List<String> keyLists = new ArrayList<>(figureDataSets.keySet());
+                if (figureMapXMLDataList.get(figureItemName) != null) {
+                    ArrayList<String> figurePartIDs = figureMapXMLDataList.get(figureItemName);
+                    System.out.println("figurePartIDs = " + figurePartIDs);
+
+                    HashMap<String, ArrayList<String>> figureDataXMLSets = XMLOperations.getFigureDataValues(inputFiguredataXMLPath);
+                    HashMap<String, ArrayList<String>> figureDataJSONSets=JsonOperations.getFigureDataValues(inputJsonFigureData);
+                    figureDataXMLSets.putAll(figureDataJSONSets);
+                    System.out.println("figureDataXMLSets = " + figureDataXMLSets);
+
+                    List<String> keyLists = new ArrayList<>(figureDataXMLSets.keySet());
+                    System.out.println(keyLists);
                     for (int i = 0; i < keyLists.size(); i++) {
-                        if (figureDataSets.get(keyLists.get(i)).containsAll(figurePartIDs)) {
+                        System.out.println(keyLists.get(i));
+                        if (figureDataXMLSets.get(keyLists.get(i)).containsAll(figurePartIDs)) {
                             int customParam = Integer.parseInt(keyLists.get(i));
 
-                            generateSQL(s, figureItemName, customParam, "output/sqls/catalog_items.sql", "output/sqls/items_base.sql", "output/sqls/catalog_clothing.sql", randomItemID);
+                            generateSQL(s, customParam, "output/sqls/catalog_items.sql", "output/sqls/items_base.sql", "output/sqls/catalog_clothing.sql", randomItemID);
                             XMLOperations.createXmlData(s, customParam, randomItemID, "output/xml/furnidata.xml");
                             JsonOperations.createJsonData(s,customParam,randomItemID,"output/json/FurnitureData.json");
                             randomItemID++;
@@ -165,7 +200,9 @@ public class Events {
     }
 
 
-    private static void generateSQL(String itemName, String figureItemName, int figuredataSetID, String catalogSQLFilePath, String itemsBaseSQLFilePath, String catalogClothingSQLFilePath, long randomIDNumber) {
+
+
+    private static void generateSQL(String itemName, int figuredataSetID, String catalogSQLFilePath, String itemsBaseSQLFilePath, String catalogClothingSQLFilePath, long randomIDNumber) {
 
         try {
 
@@ -176,7 +213,7 @@ public class Events {
             writeCatalogItems.write("INSERT INTO `items_base` (`id`,`item_name`,`public_name`,`stack_height`,`allow_stack`,`sprite_id`,`interaction_type`,`interaction_modes_count`)VALUES ('" + randomIDNumber + "', '" + itemName + "', '" + itemName + "_name', '1', '1', '" + randomIDNumber + "', 'default', '1');\n");
 
             Writer writeCatalogClothing = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(catalogClothingSQLFilePath, true), "UTF-8"));
-            writeCatalogClothing.write("INSERT INTO `catalog_clothing` (`name`,`set_id`)VALUES ('" + figureItemName + "', '" + figuredataSetID + "');\n");
+            writeCatalogClothing.write("INSERT INTO `catalog_clothing` (`name`,`set_id`)VALUES ('" + itemName + "', '" + figuredataSetID + "');\n");
 
             writeItems.close();
             writeCatalogItems.close();
