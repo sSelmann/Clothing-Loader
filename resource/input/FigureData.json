@@ -1,0 +1,33 @@
+{ "FigureData":[
+  {
+    "id": 3347,
+    "gender": "U",
+    "club": 0,
+    "colorable": true,
+    "selectable": true,
+    "preselectable": false,
+    "sellable": false,
+    "parts": [
+      {
+        "id": 2588,
+        "type": "ha",
+        "colorable": true,
+        "index": 0,
+        "colorindex": 1
+      },
+      {
+        "id": 2589,
+        "type": "ha",
+        "colorable": true,
+        "index": 1,
+        "colorindex": 2
+      }
+    ],
+    "hiddenLayers": [
+      {
+        "partType": "hrb"
+      }
+    ]
+  }
+]
+}

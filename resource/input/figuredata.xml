@@ -1,0 +1,10 @@
+<sets>
+    <set id="5014" gender="U" club="0" colorable="1" selectable="1" preselectable="0" sellable="1">
+        <part id="4660" type="ch" colorable="1" index="0" colorindex="1"/>
+        <part id="4660" type="ls" colorable="1" index="0" colorindex="1"/>
+        <part id="4660" type="rs" colorable="1" index="0" colorindex="1"/>
+        <part id="4661" type="ch" colorable="0" index="1" colorindex="0"/>
+        <part id="4661" type="ls" colorable="0" index="1" colorindex="0"/>
+        <part id="4661" type="rs" colorable="0" index="1" colorindex="0"/>
+    </set>
+</sets>
