@@ -10,7 +10,7 @@ import java.util.*;
 public class XMLOperations extends DefaultHandler {
 
     public static void main(String[] args) throws FileNotFoundException {
-        XML xml = new XMLDocument(new File("input/figuredata.xml"));
+        XML xml = new XMLDocument(new File("resource/input/figuredata.xml"));
         System.out.println(xml.xpath("//sets//set"));
 
     }

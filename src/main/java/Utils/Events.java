@@ -10,18 +10,18 @@ import java.util.*;
 
 public class Events {
 
-    static String inputFiguredataXMLPath = "input/figuredata.xml";
-    static String inputFiguremapJSONPath = "input/FigureMap.json";
-    static String inputFigureDataJSONPath = "input/FigureData.json";
+    static String inputFiguredataXMLPath = "resource/input/figuredata.xml";
+    static String inputFiguremapJSONPath = "resource/input/FigureMap.json";
+    static String inputFigureDataJSONPath = "resource/input/FigureData.json";
     static String inputJsonFigureMap = StringOperations.readFile(inputFiguremapJSONPath);
     static String inputJsonFigureData = StringOperations.readFile(inputFigureDataJSONPath);
 
     public static void addFiguremapData() throws IOException {
 
-        String hotelFiguremapXMLPath = "backupFiles/figuremap.xml";
-        String hotelFiguremapJSONPath = "backupFiles/FigureMap.json";
-        String inputFiguremapXMLPath = "input/figuremap.xml";
-        String inputFiguremapJSONPath = "input/FigureMap.json";
+        String hotelFiguremapXMLPath = "resource/backupFiles/figuremap.xml";
+        String hotelFiguremapJSONPath = "resource/backupFiles/FigureMap.json";
+        String inputFiguremapXMLPath = "resource/input/figuremap.xml";
+
         File fileXML = new File(hotelFiguremapXMLPath);
         File fileJSON = new File(hotelFiguremapJSONPath);
 
@@ -77,9 +77,9 @@ public class Events {
 
     public static void addFiguredata() throws IOException {
 
-        String hotelFiguredataXMLPath = "backupfiles/figuredata.xml";
-        String hotelFiguredataJSONPath = "backupfiles/FigureData.json";
-        String inputFiguredataJSONPath = "input/FigureData.json";
+        String hotelFiguredataXMLPath = "resource/backupfiles/figuredata.xml";
+        String hotelFiguredataJSONPath = "resource/backupfiles/FigureData.json";
+        String inputFiguredataJSONPath = "resource/input/FigureData.json";
         File xmlFile = new File(hotelFiguredataXMLPath);
         File jsonFile = new File(hotelFiguredataJSONPath);
 

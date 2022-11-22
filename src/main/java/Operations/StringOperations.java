@@ -141,7 +141,7 @@ public class StringOperations {
 
         List<String> results = new ArrayList<String>();
 
-        File[] files = new File("itemfiles").listFiles();
+        File[] files = new File("resource/itemfiles").listFiles();
         //If this pathname does not denote a directory, then listFiles() returns null.
 
         for (File file : files) {
