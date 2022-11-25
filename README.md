@@ -2,10 +2,8 @@
 -
 Tool to help you add clothes to your hotel. This tool adds the data of the clothes you want to add to your existing hotel data.
 
-
 ### Note
-
-This tool does not add the clothing to your hotel directly. It provides you with the necessary data (sql,xml,json) so that you can add clothing to hotel.
+This tool works with both nitro and flash data and does not add the clothing to your hotel directly. It provides you with the necessary data (sql,xml,json) so that you can add clothing to hotel.
 
 ##  Requirements
 
@@ -158,6 +156,7 @@ For example, if the figure file of the clothing_starryjumper item is shirt_U_sta
  
 After doing that, everything is ready! just run the run.bat file.
 
+## Outputs
 You can see the new figuredata and figuremap files added to your existing file data in the output file.
 
     output/xml/figuremap.xml
