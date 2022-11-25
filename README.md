@@ -34,7 +34,7 @@ required data you need to provide;
 - `swf` or `nitro`  furni item files of the clothing to be added (*if you have and want to add the clothing to the market catalogue*).
 
 #### Difference between figure and figure furni item.
-![enter image description here](https://i.hizliresim.com/5gxxrg9.png)
+![enter image description here](https://i.hizliresim.com/1mdr4a7.png)
 
 It is the figure item we see in the clothing catalog on the **left**. 
 The one on the **right** is the figure furni item that you can buy from the catalog and put in the room. Both have separate files.
