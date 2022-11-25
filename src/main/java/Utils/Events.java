@@ -55,7 +55,7 @@ public class Events {
                 String toBeeAddedData = "";
                 //matchJSONDataAndGenerateSql(inputFiguremapJSONPath);
 
-                for (int i = 0; i < JsonOperations.getJsonArrayLength(inputFigureMap,"FigureMap"); i++) {
+                for (int i = 0; i < JsonOperations.getJsonArrayLength(inputFigureMap, "FigureMap"); i++) {
                     String object = JsonOperations.getJsonObject(inputFigureMap, i, "FigureMap").toString(4);
                     toBeeAddedData = toBeeAddedData.concat("," + object);
                 }
@@ -129,7 +129,7 @@ public class Events {
         HashMap<String, ArrayList<String>> figureMapXMLDataList = XMLOperations.getFigureMapValues(figureMapXMLPath);
         System.out.println("figureMapXMLDataList = " + figureMapXMLDataList);
         Map<String, ArrayList<String>> figureMapJSONSDataList = JsonOperations.getFigureMapTypeObjectID(figureMapJSONPath);
-        List<String> keylist=new ArrayList<>(figureMapJSONSDataList.keySet());
+        List<String> keylist = new ArrayList<>(figureMapJSONSDataList.keySet());
 
         List<String> itemNameList = StringOperations.getItemFileNames();
         List<String> keyNameList = new ArrayList<>();
@@ -140,13 +140,13 @@ public class Events {
 
         }
 
-        for (String s: keylist) {
+        for (String s : keylist) {
             if (figureMapXMLDataList.containsKey(s)) {
                 figureMapJSONSDataList.remove(s);
             }
         }
 
-        if (figureMapJSONSDataList.size()>0) {
+        if (figureMapJSONSDataList.size() > 0) {
             figureMapXMLDataList.putAll(figureMapJSONSDataList);
         }
 
@@ -172,7 +172,7 @@ public class Events {
                     System.out.println("figurePartIDs = " + figurePartIDs);
 
                     HashMap<String, ArrayList<String>> figureDataXMLSets = XMLOperations.getFigureDataValues(inputFiguredataXMLPath);
-                    HashMap<String, ArrayList<String>> figureDataJSONSets=JsonOperations.getFigureDataValues(inputJsonFigureData);
+                    HashMap<String, ArrayList<String>> figureDataJSONSets = JsonOperations.getFigureDataValues(inputJsonFigureData);
                     figureDataXMLSets.putAll(figureDataJSONSets);
                     System.out.println("figureDataXMLSets = " + figureDataXMLSets);
 
@@ -185,7 +185,7 @@ public class Events {
 
                             generateSQL(s, customParam, "output/sqls/catalog_items.sql", "output/sqls/items_base.sql", "output/sqls/catalog_clothing.sql", randomItemID);
                             XMLOperations.createXmlData(s, customParam, randomItemID, "output/xml/furnidata.xml");
-                            JsonOperations.createJsonData(s,customParam,randomItemID,"output/json/FurnitureData.json");
+                            JsonOperations.createJsonData(s, customParam, randomItemID, "output/json/FurnitureData.json");
                             randomItemID++;
                         }
                     }
@@ -200,8 +200,6 @@ public class Events {
     }
 
 
-
-
     private static void generateSQL(String itemName, int figuredataSetID, String catalogSQLFilePath, String itemsBaseSQLFilePath, String catalogClothingSQLFilePath, long randomIDNumber) {
 
         try {
@@ -213,7 +211,7 @@ public class Events {
             writeCatalogItems.write("INSERT INTO `items_base` (`id`,`item_name`,`public_name`,`stack_height`,`allow_stack`,`sprite_id`,`interaction_type`,`interaction_modes_count`)VALUES ('" + randomIDNumber + "', '" + itemName + "', '" + itemName + "_name', '1', '1', '" + randomIDNumber + "', 'default', '1');\n");
 
             Writer writeCatalogClothing = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(catalogClothingSQLFilePath, true), "UTF-8"));
-            writeCatalogClothing.write("INSERT INTO `catalog_clothing` (`name`,`set_id`)VALUES ('" + itemName + "', '" + figuredataSetID + "');\n");
+            writeCatalogClothing.write("INSERT INTO `catalog_clothing` (`name`,`setid`)VALUES ('" + itemName + "', '" + figuredataSetID + "');\n");
 
             writeItems.close();
             writeCatalogItems.close();

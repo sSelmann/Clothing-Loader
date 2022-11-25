@@ -6,51 +6,50 @@ import org.json.JSONObject;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 
 public class JsonOperations {
 
-    public static Map<String,ArrayList<String>> getFigureMapTypeObjectID(String jsonString) {
-        HashMap <String,ArrayList<String>> map=new HashMap<>();
+    public static Map<String, ArrayList<String>> getFigureMapTypeObjectID(String jsonString) {
+        HashMap<String, ArrayList<String>> map = new HashMap<>();
         for (int i = 0; i < getJsonArrayLength(jsonString, "FigureMap"); i++) {
-            ArrayList<String> idList=new ArrayList<>();
-            JSONObject data=getJsonObject(jsonString, i, "FigureMap");
-            String idName=data.get("id").toString();
-            JSONArray arr=data.getJSONArray("parts");
+            ArrayList<String> idList = new ArrayList<>();
+            JSONObject data = getJsonObject(jsonString, i, "FigureMap");
+            String idName = data.get("id").toString();
+            JSONArray arr = data.getJSONArray("parts");
             for (int j = 0; j < arr.length(); j++) {
                 idList.add(arr.getJSONObject(j).get("id").toString());
             }
-            map.put(idName,idList);
+            map.put(idName, idList);
         }
         return map;
     }
 
-    public static int getJsonArrayLength(String jsonString,String arrayName) {
+    public static int getJsonArrayLength(String jsonString, String arrayName) {
         JSONObject obj = new JSONObject(jsonString);
-        JSONArray array= obj.getJSONArray(arrayName);
+        JSONArray array = obj.getJSONArray(arrayName);
         return array.length();
     }
 
     public static JSONObject getJsonObject(String jsonString, int index, String arrayName) {
         JSONObject obj = new JSONObject(jsonString);
-        JSONArray pageName= obj.getJSONArray(arrayName);
+        JSONArray pageName = obj.getJSONArray(arrayName);
         return pageName.getJSONObject(index);
     }
 
     public static String getFigureDataFirstFigureType(String jsonString, int index) {
-        JSONObject data=getJsonObject(jsonString, index, "FigureData");
-        JSONArray arr=data.getJSONArray("parts");
+        JSONObject data = getJsonObject(jsonString, index, "FigureData");
+        JSONArray arr = data.getJSONArray("parts");
         return arr.getJSONObject(0).get("type").toString();
     }
 
-    public static HashMap<String,ArrayList<String>> getFigureDataValues(String jsonString) {
-        HashMap<String,ArrayList<String>> valueMap=new HashMap<>();
+    public static HashMap<String, ArrayList<String>> getFigureDataValues(String jsonString) {
+        HashMap<String, ArrayList<String>> valueMap = new HashMap<>();
         for (int i = 0; i < getJsonArrayLength(jsonString, "FigureData"); i++) {
 
-            ArrayList<String> partIds=new ArrayList<>();
-            JSONObject data=getJsonObject(jsonString, i, "FigureData");
-            JSONArray arr=data.getJSONArray("parts");
+            ArrayList<String> partIds = new ArrayList<>();
+            JSONObject data = getJsonObject(jsonString, i, "FigureData");
+            JSONArray arr = data.getJSONArray("parts");
             for (int j = 0; j < arr.length(); j++) {
                 partIds.add(arr.getJSONObject(j).get("id").toString());
             }
@@ -64,7 +63,6 @@ public class JsonOperations {
     public static void createJsonData(String fileName, int customParams, long randomNumber, String furnitureDataJsonFile) {
         try {
             Writer writeCatalogItems = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(furnitureDataJsonFile, true), "UTF-8"));
-            //We can write any JSONArray or JSONObject instance to the file
             writeCatalogItems.write(
                     "{" + "\"id\": " + randomNumber + "," +
                             "\"classname\": " + "\"" + fileName + "\"," +
@@ -83,8 +81,8 @@ public class JsonOperations {
                             "\"rentbuyout\": false," +
                             "\"bc\": false," +
                             "\"excludeddynamic\":  false," +
-                            "\"customparams\": \""+customParams+"\"," +
-                            "\"specialtype\": " + 1 + "," +
+                            "\"customparams\": \"" + customParams + "\"," +
+                            "\"specialtype\": " + 23 + "," +
                             "\"canstandon\": false," +
                             "\"cansiton\": false," +
                             "\"canlayon\": false," +
