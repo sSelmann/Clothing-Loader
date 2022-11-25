@@ -17,6 +17,7 @@ The data required to add Clothing to a Hotel are as follows;
 - Clothing figure `swf`/`nitro` file 
 - Figuredata `xml`/`json` data  
 - Figuremap `xml`/`json` data 
+
 *If you want to add the clothes to the market catalog, you also need these;*
 - Clothing furni item  `swf`/`nitro` file 
 - catalog_clothing `sql✅` data
@@ -34,13 +35,14 @@ required data you need to provide;
 
 #### Difference between figure and figure furni item.
 ![enter image description here](https://i.hizliresim.com/5gxxrg9.png)
+
 It is the figure item we see in the clothing catalog on the **left**. 
 The one on the **right** is the figure furni item that you can buy from the catalog and put in the room. Both have separate files.
 
 They both have separate files and there is sql configuration in the game that connects these two objects.
 
 ## Usage
-**1**- First, place your existing hotel data in the [backup folder](https://github.com/sSelmann/Clothing-Loader/tree/master/resource/backupfiles). Delete the sample backup files and add your own.
+#### 1- First, place your existing hotel data in the [backup folder](https://github.com/sSelmann/Clothing-Loader/tree/master/resource/backupfiles). Delete the sample backup files and add your own.
 
 files you need to add:
 |                |For Flash                          |For Nitro|
@@ -170,3 +172,8 @@ however, if you want to add clothing to the market catalog, you can see the outp
     output/sql/catalog_items.sql
     output/sql/catalog_clothing.sql
     output/sql/items_base.sql
+Run the sql files in the database. Don't forget to edit the PAGE_ID in the catalog_items.sql file.
+
+You can replace the **Figuredata** and **Figuremap** `xml`/`json` files with your existing hotel data.
+
+You can add your data in FurnitureData.json and furnidata.xml to your existing Furnituredata and furnidata files.
