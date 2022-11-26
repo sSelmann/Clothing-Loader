@@ -31,6 +31,9 @@ required data you need to provide;
 - `xml` or `json` figuredata of the clothing to be added.
 - `swf` or `nitro`  furni item files of the clothing to be added (*if you have and want to add the clothing to the market catalogue*).
 
+> **Note:** This tool can only work with the data you provide. It will not convert your xml data to json or your json data to xml. So if you need to convert the data you want to add, you can use [Nitro Converter](https://git.krews.org/nitro/nitro-converter) first and convert your data to json and nitro easily.
+
+
 #### Difference between figure and figure furni item.
 ![enter image description here](https://i.hizliresim.com/1mdr4a7.png)
 
