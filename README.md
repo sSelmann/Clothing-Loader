@@ -33,7 +33,6 @@ required data you need to provide;
 
 > **Note:** This tool can only work with the data you provide. It will not convert your xml data to json or your json data to xml. So if you need to convert the data you want to add, you can use [Nitro Converter](https://git.krews.org/nitro/nitro-converter) first and convert your data to json and nitro easily.
 
-
 #### Difference between figure and figure furni item.
 ![enter image description here](https://i.hizliresim.com/1mdr4a7.png)
 
@@ -43,6 +42,9 @@ The one on the **right** is the figure furni item that you can buy from the cata
 They both have separate files and there is sql configuration in the game that connects these two objects.
 
 ## Usage
+
+download: [![Latest release](https://badgen.net/github/release/Naereen/Strapdown.js)](https://github.com/sSelmann/Clothing-Loader/releases/)
+
 #### 1- First, place your existing hotel data in the [backup folder](https://github.com/sSelmann/Clothing-Loader/tree/master/resource/backupfiles). Delete the sample backup files and add your own.
 
 files you need to add:
