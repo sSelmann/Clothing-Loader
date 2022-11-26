@@ -6,6 +6,7 @@ import Operations.XMLOperations;
 import com.jcabi.xml.XML;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.util.*;
 
 public class Events {
@@ -21,6 +22,10 @@ public class Events {
         String hotelFiguremapXMLPath = "resource/backupFiles/figuremap.xml";
         String hotelFiguremapJSONPath = "resource/backupFiles/FigureMap.json";
         String inputFiguremapXMLPath = "resource/input/figuremap.xml";
+
+        StringOperations.createDirectory("output/sqls");
+        StringOperations.createDirectory("output/xml");
+        StringOperations.createDirectory("output/json");
 
         File fileXML = new File(hotelFiguremapXMLPath);
         File fileJSON = new File(hotelFiguremapJSONPath);

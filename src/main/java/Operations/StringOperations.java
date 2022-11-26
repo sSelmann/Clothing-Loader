@@ -158,4 +158,9 @@ public class StringOperations {
         return (int) (Math.random() * (timestamp.getTime() / 100000));
     }
 
+    public static void createDirectory(String path) {
+        File dir=new File(path);
+        dir.mkdir();
+    }
+
 }
