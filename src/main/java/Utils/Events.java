@@ -127,7 +127,6 @@ public class Events {
 
     private static void matchXMLDataAndGenerateSql(String figureMapXMLPath, String figureMapJSONPath) throws FileNotFoundException {
         HashMap<String, ArrayList<String>> figureMapXMLDataList = XMLOperations.getFigureMapValues(figureMapXMLPath);
-        System.out.println("figureMapXMLDataList = " + figureMapXMLDataList);
         Map<String, ArrayList<String>> figureMapJSONSDataList = JsonOperations.getFigureMapTypeObjectID(figureMapJSONPath);
         List<String> keylist = new ArrayList<>(figureMapJSONSDataList.keySet());
 
@@ -169,17 +168,13 @@ public class Events {
                 String figureItemName = GetConfig.ini.get("Add_To_Clothing_Catalog_&_Market_Catalog", s);
                 if (figureMapXMLDataList.get(figureItemName) != null) {
                     ArrayList<String> figurePartIDs = figureMapXMLDataList.get(figureItemName);
-                    System.out.println("figurePartIDs = " + figurePartIDs);
 
                     HashMap<String, ArrayList<String>> figureDataXMLSets = XMLOperations.getFigureDataValues(inputFiguredataXMLPath);
                     HashMap<String, ArrayList<String>> figureDataJSONSets = JsonOperations.getFigureDataValues(inputJsonFigureData);
                     figureDataXMLSets.putAll(figureDataJSONSets);
-                    System.out.println("figureDataXMLSets = " + figureDataXMLSets);
 
                     List<String> keyLists = new ArrayList<>(figureDataXMLSets.keySet());
-                    System.out.println(keyLists);
                     for (int i = 0; i < keyLists.size(); i++) {
-                        System.out.println(keyLists.get(i));
                         if (figureDataXMLSets.get(keyLists.get(i)).containsAll(figurePartIDs)) {
                             int customParam = Integer.parseInt(keyLists.get(i));
 

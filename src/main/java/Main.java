@@ -8,6 +8,7 @@ public class Main {
 
         Events.addFiguremapData();
         Events.addFiguredata();
+
     }
 
 }

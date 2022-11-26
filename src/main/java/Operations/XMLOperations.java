@@ -2,18 +2,11 @@ package Operations;
 
 import com.jcabi.xml.XML;
 import com.jcabi.xml.XMLDocument;
-import jdk.internal.org.xml.sax.helpers.DefaultHandler;
 
 import java.io.*;
 import java.util.*;
 
-public class XMLOperations extends DefaultHandler {
-
-    public static void main(String[] args) throws FileNotFoundException {
-        XML xml = new XMLDocument(new File("resource/input/figuredata.xml"));
-        System.out.println(xml.xpath("//sets//set"));
-
-    }
+public class XMLOperations {
 
     public static List<XML> getFiguremapLibs(String filePath) throws FileNotFoundException {
         XML xml = new XMLDocument(new File(filePath));
