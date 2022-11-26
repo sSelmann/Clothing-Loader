@@ -160,7 +160,7 @@ public class StringOperations {
 
     public static void createDirectory(String path) {
         File dir=new File(path);
-        dir.mkdir();
+        dir.mkdirs();
     }
 
 }
