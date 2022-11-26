@@ -6,7 +6,6 @@ import Operations.XMLOperations;
 import com.jcabi.xml.XML;
 
 import java.io.*;
-import java.nio.file.Files;
 import java.util.*;
 
 public class Events {

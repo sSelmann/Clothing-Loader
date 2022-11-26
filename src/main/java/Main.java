@@ -1,5 +1,4 @@
 import Utils.Events;
-
 import java.io.IOException;
 
 public class Main {
@@ -8,6 +7,8 @@ public class Main {
 
         Events.addFiguremapData();
         Events.addFiguredata();
+
+        System.out.println("Done!");
 
     }
 
