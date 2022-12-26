@@ -170,7 +170,15 @@ public class Events {
 
             if (GetConfig.ini.get("Add_To_Clothing_Catalog_&_Market_Catalog", s) != null) {
                 String figureItemName = GetConfig.ini.get("Add_To_Clothing_Catalog_&_Market_Catalog", s);
-                if (figureMapXMLDataList.get(figureItemName) != null) {
+                if (Character.isDigit(figureItemName.charAt(0))) {
+                    String customParam = figureItemName;
+
+                    generateSQL(s, customParam, "output/sqls/catalog_items.sql", "output/sqls/items_base.sql", "output/sqls/catalog_clothing.sql", randomItemID);
+                    XMLOperations.createXmlData(s, customParam, randomItemID, "output/xml/furnidata.xml");
+                    JsonOperations.createJsonData(s, customParam, randomItemID, "output/json/FurnitureData.json");
+                    randomItemID++;
+
+                } else if (figureMapXMLDataList.get(figureItemName) != null) {
                     ArrayList<String> figurePartIDs = figureMapXMLDataList.get(figureItemName);
 
                     HashMap<String, ArrayList<String>> figureDataXMLSets = XMLOperations.getFigureDataValues(inputFiguredataXMLPath);
@@ -180,7 +188,7 @@ public class Events {
                     List<String> keyLists = new ArrayList<>(figureDataXMLSets.keySet());
                     for (int i = 0; i < keyLists.size(); i++) {
                         if (figureDataXMLSets.get(keyLists.get(i)).containsAll(figurePartIDs)) {
-                            int customParam = Integer.parseInt(keyLists.get(i));
+                            String customParam = keyLists.get(i);
 
                             generateSQL(s, customParam, "output/sqls/catalog_items.sql", "output/sqls/items_base.sql", "output/sqls/catalog_clothing.sql", randomItemID);
                             XMLOperations.createXmlData(s, customParam, randomItemID, "output/xml/furnidata.xml");
@@ -199,7 +207,7 @@ public class Events {
     }
 
 
-    private static void generateSQL(String itemName, int figuredataSetID, String catalogSQLFilePath, String itemsBaseSQLFilePath, String catalogClothingSQLFilePath, long randomIDNumber) {
+    private static void generateSQL(String itemName, String figuredataSetID, String catalogSQLFilePath, String itemsBaseSQLFilePath, String catalogClothingSQLFilePath, long randomIDNumber) {
 
         try {
 
